@@ -6,7 +6,7 @@ export const adminFilterableFields = [
   'email',
   'contactNo',
   'emergencyContactNo',
-  'managementCar',
+  'managementAuction',
   'designation',
 ];
 

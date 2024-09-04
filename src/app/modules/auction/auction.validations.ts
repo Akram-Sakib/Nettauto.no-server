@@ -1,14 +1,13 @@
 import { z } from 'zod';
 // Zod schema for IDocuments
 const DocumentSchema = z.object({
-  title: z.string().nonempty("Title is required"),
-  pdf: z.string().nonempty("PDF link is required"),
-  _id: z.string().nonempty("ID is required")
+  originalname: z.string().nonempty("Title is required"),
+  path: z.string().nonempty("PDF link is required"),
 });
 
-// Zod schema for ICar
-const createCarZodSchema = z.object({
-  carRegistrationNo: z.string().nonempty("Car registration number is required"),
+// Zod schema for IAuction
+const createAuctionZodSchema = z.object({
+  carRegistrationNo: z.string().nonempty("Auction registration number is required"),
   place: z.string().nonempty("Place is required"),
   description: z.string().nonempty("Description is required"),
   images: z.array(z.string().url().nonempty("Image URL is required")),
@@ -24,15 +23,15 @@ const createCarZodSchema = z.object({
   minimumPrice: z.string().nonempty("Minimum price is required"),
   fuel: z.string().nonempty("Fuel type is required"),
   descriptionCondition: z.string().nonempty("Condition description is required"),
-  // equipment: z.string().nonempty("Equipment is required"),
-  // documents: z.array(DocumentSchema),
+  equipment: z.array(z.string().nonempty("Equipment is required")),
+  documents: z.array(DocumentSchema),
   auctionTime: z.string().nonempty("Auction time is required")
 });
 
 
-const updateCarZodSchema = createCarZodSchema.partial();
+const updateAuctionZodSchema = createAuctionZodSchema.partial();
 
-export const CarValidation = {
-  createCarZodSchema,
-  updateCarZodSchema,
+export const AuctionValidation = {
+  createAuctionZodSchema,
+  updateAuctionZodSchema,
 };

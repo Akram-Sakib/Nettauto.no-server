@@ -11,7 +11,7 @@ import { IAdmin, IAdminFilters } from './admin.interface';
 import { Admin } from './admin.model';
 
 const getSingleAdmin = async (id: string): Promise<IAdmin | null> => {
-  const result = await Admin.findOne({ id }).populate('managementCar');
+  const result = await Admin.findOne({ id }).populate('managementAuction');
   return result;
 };
 
@@ -58,7 +58,7 @@ const getAllAdmins = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Admin.find(whereConditions)
-    .populate('managementCar')
+    .populate('managementAuction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);

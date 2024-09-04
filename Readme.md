@@ -69,15 +69,15 @@ This is the documentation for the Authentication Service component of the Univer
 - `PATCH /-semesters/:id`
 - `DELETE /-semesters/:id`
 
-### Academic Car
+### Academic Auction
 
-- `POST /-cars/create-car`
-- `GET /-cars`
-- `GET /-cars?searchTerm=math`
-- `GET /-cars?page=1&limit=10&sortBy=title&sortOrder=asc`
-- `GET /-cars/:id`
-- `PATCH /-cars/:id`
-- `DELETE /-cars/:id`
+- `POST /-auctions/create-auction`
+- `GET /-auctions`
+- `GET /-auctions?searchTerm=math`
+- `GET /-auctions?page=1&limit=10&sortBy=title&sortOrder=asc`
+- `GET /-auctions/:id`
+- `PATCH /-auctions/:id`
+- `DELETE /-auctions/:id`
 
 ### Academic Faculty
 

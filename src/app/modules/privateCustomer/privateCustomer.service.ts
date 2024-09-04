@@ -14,7 +14,7 @@ import { PrivateCustomer } from './privateCustomer.model';
 
 const getSinglePrivateCustomer = async (id: string): Promise<IPrivateCustomer | null> => {
   const result = await PrivateCustomer.findOne({ id })
-    // .populate('Car')
+    // .populate('Auction')
     // .populate('PrivateCustomer');
 
   return result;
@@ -60,7 +60,7 @@ const getAllPrivateCustomers = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await PrivateCustomer.find(whereConditions)
-    // .populate('Car')
+    // .populate('Auction')
     // .populate('PrivateCustomer')
     .sort(sortConditions)
     .skip(skip)
@@ -102,7 +102,7 @@ const updatePrivateCustomer = async (
     { new: true }
   )
     // .populate('PrivateCustomer')
-    // .populate('Car')
+    // .populate('Auction')
     ;
 
   return result;

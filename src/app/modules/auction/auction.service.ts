@@ -2,32 +2,32 @@ import { SortOrder, Types } from 'mongoose';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { CarSearchableFields } from './car.constants';
+import { AuctionSearchableFields } from './auction.constants';
 import {
-  ICar,
-  ICarFilters,
+  IAuction,
+  IAuctionFilters,
   IDocuments,
-} from './car.interfaces';
-import { Car } from './car.model';
+} from './auction.interfaces';
+import { Auction } from './auction.model';
 
-const createCar = async (carData: ICar) => {
+const createAuction = async (auctionData: IAuction) => {
 
-  const car = new Car(carData);
-  return await car.save();
+  const auction = new Auction(auctionData);
+  return await auction.save();
 }
 
-const getSingleCar = async (
+const getSingleAuction = async (
   id: string
-): Promise<ICar | null> => {
-  const result = await Car.findById(id)
+): Promise<IAuction | null> => {
+  const result = await Auction.findById(id)
 
   return result;
 };
 
-const getAllCars = async (
-  filters: ICarFilters,
+const getAllAuctions = async (
+  filters: IAuctionFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<ICar[]>> => {
+): Promise<IGenericResponse<IAuction[]>> => {
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -39,7 +39,7 @@ const getAllCars = async (
   // Search needs $or for searching in specified fields
   if (searchTerm) {
     andConditions.push({
-      $or: CarSearchableFields.map(field => ({
+      $or: AuctionSearchableFields.map(field => ({
         [field]: {
           $regex: searchTerm,
           $paginationOptions: 'i',
@@ -67,13 +67,13 @@ const getAllCars = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const result = await Car.find(whereConditions)
-    // .populate('car')
+  const result = await Auction.find(whereConditions)
+    // .populate('auction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
 
-  const total = await Car.countDocuments(whereConditions);
+  const total = await Auction.countDocuments(whereConditions);
 
   return {
     meta: {
@@ -85,20 +85,20 @@ const getAllCars = async (
   };
 };
 
-const updateCar = async (
-  id: string, data: Partial<ICar>, images?: Express.Multer.File[]
-): Promise<ICar | null> => {
-  const car = await Car.findById(id);
-  if (!car) throw new Error('Car not found');
+const updateAuction = async (
+  id: string, data: Partial<IAuction>, images?: Express.Multer.File[]
+): Promise<IAuction | null> => {
+  const auction = await Auction.findById(id);
+  if (!auction) throw new Error('Auction not found');
 
   if (images) {
     const imageUrls = images.map((image) => image.path);
-    car.images.push(...imageUrls);
+    auction.images.push(...imageUrls);
   }
-  Object.assign(car, data);
+  Object.assign(auction, data);
 
-  return car.save();
-  // const result = await Car.findOneAndUpdate(
+  return auction.save();
+  // const result = await Auction.findOneAndUpdate(
   //   { _id: id },
   //   payload,
   //   {
@@ -109,32 +109,32 @@ const updateCar = async (
   // return result;
 };
 
-// async updateCar(id: string, data: Partial<ICar>, images ?: Express.Multer.File[]) {
-//   const car = await CarModel.findById(id);
-//   if (!car) throw new Error('Car not found');
+// async updateAuction(id: string, data: Partial<IAuction>, images ?: Express.Multer.File[]) {
+//   const auction = await AuctionModel.findById(id);
+//   if (!auction) throw new Error('Auction not found');
 
 //   if (images) {
 //     const imageUrls = images.map((image) => image.path);
-//     car.images.push(...imageUrls);
+//     auction.images.push(...imageUrls);
 //   }
 
-//   Object.assign(car, data);
-//   return car.save();
+//   Object.assign(auction, data);
+//   return auction.save();
 // }
 
-const deleteCar = async (
+const deleteAuction = async (
   id: string
-): Promise<ICar | null> => {
-  const result = await Car.findByIdAndDelete(id);
+): Promise<IAuction | null> => {
+  const result = await Auction.findByIdAndDelete(id);
   return result;
 };
 
 
 
-export const CarService = {
-  createCar,
-  getSingleCar,
-  getAllCars,
-  updateCar,
-  deleteCar,
+export const AuctionService = {
+  createAuction,
+  getSingleAuction,
+  getAllAuctions,
+  updateAuction,
+  deleteAuction,
 };

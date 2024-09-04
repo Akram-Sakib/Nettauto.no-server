@@ -1,18 +1,19 @@
-import { Schema, model, Types } from 'mongoose';
+import { model, Schema } from 'mongoose';
+import { AUCTION_COLLECTION } from './auction.constants';
 import {
-  CarModel,
-  ICar,
+  AuctionModel,
+  IAuction,
   IDocuments,
-} from './car.interfaces';
+} from './auction.interfaces';
 
 const DocumentSchema = new Schema<IDocuments>({
-  title: { type: String, required: true },
-  pdf: { type: String, required: true },
+  originalname: { type: String, required: true },
+  path: { type: String, required: true },
 });
 
-const CarSchema = new Schema<
-  ICar,
-  CarModel
+const AuctionSchema = new Schema<
+  IAuction,
+  AuctionModel
 >(
   {
     carRegistrationNo: {
@@ -85,7 +86,7 @@ const CarSchema = new Schema<
       type: String,
       required: true,
     },
-    // documents: { type: [DocumentSchema], required: true },
+    documents: { type: [DocumentSchema], required: true },
     auctionTime: { type: String, required: true },
   },
   {
@@ -96,7 +97,7 @@ const CarSchema = new Schema<
   }
 );
 
-export const Car = model<
-  ICar,
-  CarModel
->('Car', CarSchema);
+export const Auction = model<
+  IAuction,
+  AuctionModel
+>(AUCTION_COLLECTION, AuctionSchema);

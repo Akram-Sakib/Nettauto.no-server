@@ -74,7 +74,7 @@ const createBusinessCustomer = async (
         //     path: 'Semester',
         //   },
         //   {
-        //     path: 'Car',
+        //     path: 'Auction',
         //   },
         //   {
         //     path: 'PrivateCustomer',
@@ -132,7 +132,7 @@ const createPrivateCustomer = async (
       path: 'privateCustomer',
       // populate: [
       //   {
-      //     path: 'Car',
+      //     path: 'Auction',
       //   },
       //   {
       //     path: 'PrivateCustomer',
@@ -190,7 +190,7 @@ const createAdmin = async (
       path: 'admin',
       // populate: [
       //   {
-      //     path: 'managementCar',
+      //     path: 'managementAuction',
       //   },
       // ],
     });

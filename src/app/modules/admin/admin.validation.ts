@@ -24,7 +24,7 @@ const updateAdmin = z.object({
 
     permanentAddress: z.string().optional(),
 
-    car: z.string().optional(),
+    auction: z.string().optional(),
 
     designation: z.string().optional(),
 

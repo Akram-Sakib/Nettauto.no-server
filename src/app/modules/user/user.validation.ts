@@ -167,8 +167,8 @@ const createAdminZodSchema = z.object({
         required_error: 'Permanent address is required',
       }),
 
-      managementCar: z.string({
-        required_error: 'Management car is required',
+      managementAuction: z.string({
+        required_error: 'Management auction is required',
       }),
 
       designation: z.string({

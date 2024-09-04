@@ -1,11 +1,19 @@
-import { Document, Model, Types } from 'mongoose';
+import { Document, Model } from 'mongoose';
 
 export type IDocuments = {
-  title: string;
-  pdf: string
+  originalname: string
+  path: string;
 }
 
-export type ICar = {
+export enum IStatus {
+  NOT_APPROVED = "Ikke godkjent",
+  LIVE_NOW = "live now",
+  AWAITING_APPROVAL = "Venter på godkjenning",
+  BID_NOT_ACCEPTED = "Bud ikke aksepetert",
+  UNDER_REGISTRATION = "Under registrering",
+}
+
+export type IAuction = {
   carRegistrationNo: string;
   place: string
   description: string
@@ -23,16 +31,17 @@ export type ICar = {
   fuel: string
   descriptionCondition: string
   equipment: string
-  // documents: IDocuments[]
+  documents: IDocuments[]
   auctionTime: string
+  status: IStatus
 };
 
-export type CarModel = Model<
-  ICar & Document,
+export type AuctionModel = Model<
+  IAuction & Document,
   Record<string, unknown>
 >;
 
-export type ICarFilters = {
+export type IAuctionFilters = {
   searchTerm?: string;
   brand?: string
 };

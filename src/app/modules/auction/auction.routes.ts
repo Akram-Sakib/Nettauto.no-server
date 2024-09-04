@@ -3,42 +3,43 @@ import uploadToCloudinary from '../../../config/cloudinary';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
-import { CarController } from './car.controller';
-import { CarValidation } from './car.validations';
+import { AuctionController } from './auction.controller';
+import { AuctionValidation } from './auction.validations';
 
 const router = express.Router();
 
 router.post(
-  '/create-car',
+  '/create-auction',
   // validateRequest(
-  //   CarValidation.createCarZodSchema
+  //   AuctionValidation.createAuctionZodSchema
   // ),
-  uploadToCloudinary("car", [
+  uploadToCloudinary("auction", [
     "image/jpeg",
     "image/jpg",
     "image/png",
-  ]).fields([{ name: 'images', maxCount: 5 }]),
+    "application/pdf",
+  ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
   // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
-  CarController.createCar
+  AuctionController.createAuction
 );
 
-router.get('/:id', CarController.getSingleCar);
+router.get('/:id', AuctionController.getSingleAuction);
 
-router.get('/', CarController.getAllCars);
+router.get('/', AuctionController.getAllAuctions);
 
 router.patch(
   '/:id',
   validateRequest(
-    CarValidation.updateCarZodSchema
+    AuctionValidation.updateAuctionZodSchema
   ),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  CarController.updateCar
+  AuctionController.updateAuction
 );
 
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN),
-  CarController.deleteCar
+  AuctionController.deleteAuction
 );
 
-export const CarRoutes = router;
+export const AuctionRoutes = router;

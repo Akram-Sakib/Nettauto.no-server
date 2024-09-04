@@ -1,7 +1,7 @@
 {
   "include": [
     "src",
-    "src/app/modules/profile/car.constant.ts",
+    "src/app/modules/profile/auction.constant.ts",
     "logs/permission",
     "logs/userPermission"
   ], // which files to compile

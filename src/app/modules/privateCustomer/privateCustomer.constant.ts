@@ -6,8 +6,8 @@ export const privateCustomerFilterableFields = [
   'email',
   'contactNo',
   'emergencyContactNo',
-  'car',
-  'Car',
+  'auction',
+  'Auction',
   'designation',
 ];
 

@@ -51,8 +51,8 @@ const getAllBusinessCustomers = async (
 
   const result = await BusinessCustomer.find(whereConditions)
     // .populate('Semester')
-    // .populate('Car')
-    // .populate('car')
+    // .populate('Auction')
+    // .populate('auction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -72,8 +72,8 @@ const getAllBusinessCustomers = async (
 const getSingleBusinessCustomer = async (id: string): Promise<IBusinessCustomer | null> => {
   const result = await BusinessCustomer.findOne({ id })
     // .populate('Semester')
-    // .populate('Car')
-    // .populate('car');
+    // .populate('Auction')
+    // .populate('auction');
   return result;
 };
 
@@ -116,8 +116,8 @@ const updateBusinessCustomer = async (
   const result = await BusinessCustomer.findOneAndUpdate({ id }, updatedBusinessCustomerData, {
     new: true,
   })
-    // .populate('car')
-    // .populate('Car')
+    // .populate('auction')
+    // .populate('Auction')
     // .populate('Semester');
   ;
 
