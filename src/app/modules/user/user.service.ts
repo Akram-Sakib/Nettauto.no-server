@@ -154,7 +154,7 @@ const createAdmin = async (
     user.password = config.default_admin_pass as string;
   }
   // set role
-  user.role = 'admin';
+  user.role = admin.role;
 
   let newUserAllData = null;
   const session = await mongoose.startSession();
@@ -165,7 +165,7 @@ const createAdmin = async (
     const newAdmin = await Admin.create([admin], { session });
 
     if (!newAdmin.length) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create privateCustomer ');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create Admin');
     }
 
     user.admin = newAdmin[0]._id;
@@ -186,7 +186,7 @@ const createAdmin = async (
   }
 
   if (newUserAllData) {
-    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+    newUserAllData = await User.findById(newUserAllData._id).populate({
       path: 'admin',
       // populate: [
       //   {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
-import mongoose, { SortOrder } from 'mongoose';
+import mongoose, { SortOrder, Types } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -11,7 +11,9 @@ import { IAdmin, IAdminFilters } from './admin.interface';
 import { Admin } from './admin.model';
 
 const getSingleAdmin = async (id: string): Promise<IAdmin | null> => {
-  const result = await Admin.findOne({ id }).populate('managementAuction');
+  const result = await Admin.findById(id);
+  console.log(result);
+
   return result;
 };
 
@@ -58,7 +60,7 @@ const getAllAdmins = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Admin.find(whereConditions)
-    .populate('managementAuction')
+    // .populate('managementAuction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -76,10 +78,10 @@ const getAllAdmins = async (
 };
 
 const updateAdmin = async (
-  id: string,
+  id: Types.ObjectId,
   payload: Partial<IAdmin>
 ): Promise<IAdmin | null> => {
-  const isExist = await Admin.findOne({ id });
+  const isExist = await Admin.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Admin not found !');
@@ -87,44 +89,44 @@ const updateAdmin = async (
 
   const { name, ...adminData } = payload;
 
-  const updatedStudentData: Partial<IAdmin> = { ...adminData };
+  const updatedadminData: Partial<IAdmin> = { ...adminData };
 
   if (name && Object.keys(name).length > 0) {
     Object.keys(name).forEach(key => {
       const nameKey = `name.${key}` as keyof Partial<IAdmin>;
-      (updatedStudentData as any)[nameKey] = name[key as keyof typeof name];
+      (updatedadminData as any)[nameKey] = name[key as keyof typeof name];
     });
   }
 
-  const result = await Admin.findOneAndUpdate({ id }, updatedStudentData, {
+  const result = await Admin.findOneAndUpdate(id, updatedadminData, {
     new: true,
   });
   return result;
 };
 
 const deleteAdmin = async (id: string): Promise<IAdmin | null> => {
-  // check if the faculty is exist
-  const isExist = await Admin.findOne({ id });
+  // check if the Admin is exist
+  const isExist = await Admin.findById(id);
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Faculty not found !');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Admin not found !');
   }
 
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
-    //delete student first
-    const student = await Admin.findOneAndDelete({ id }, { session });
-    if (!student) {
-      throw new ApiError(404, 'Failed to delete student');
+    //delete admin first
+    const admin = await Admin.findByIdAndDelete(id, { session });
+    if (!admin) {
+      throw new ApiError(404, 'Failed to delete admin');
     }
     //delete user
-    await User.deleteOne({ id });
+    await User.deleteOne({ admin: id });
     session.commitTransaction();
     session.endSession();
 
-    return student;
+    return admin;
   } catch (error) {
     session.abortTransaction();
     throw error;

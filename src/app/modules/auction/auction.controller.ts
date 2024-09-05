@@ -12,8 +12,8 @@ import { AuctionValidation } from './auction.validations';
 
 const createAuction = catchAsync(async (req: Request, res: Response) => {
   const files = req.files;
-  console.log(files);
-
+  // console.log(req.body.equipment);
+  
   if (!files) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,

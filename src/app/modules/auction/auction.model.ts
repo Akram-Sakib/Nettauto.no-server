@@ -83,7 +83,7 @@ const AuctionSchema = new Schema<
       required: true,
     },
     equipment: {
-      type: String,
+      type: [String],
       required: true,
     },
     documents: { type: [DocumentSchema], required: true },

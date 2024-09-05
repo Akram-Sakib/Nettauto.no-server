@@ -1,13 +1,14 @@
 import { Schema, model } from 'mongoose';
 import { AdminModel, IAdmin } from './admin.interface';
+import { role } from './admin.constant';
 
 const AdminSchema = new Schema<IAdmin, AdminModel>(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+    // id: {
+    //   type: String,
+    //   required: true,
+    //   unique: true,
+    // },
     name: {
       type: {
         firstName: {
@@ -21,17 +22,18 @@ const AdminSchema = new Schema<IAdmin, AdminModel>(
       },
       required: true,
     },
-    dateOfBirth: {
-      type: String,
-    },
-    gender: {
-      type: String,
-      enum: ['male', 'female'],
-    },
     email: {
       type: String,
       unique: true,
       required: true,
+    },
+    role: {
+      type: String,
+      enum: role,
+      required: true,
+    },
+    dateOfBirth: {
+      type: String,
     },
     contactNo: {
       type: String,

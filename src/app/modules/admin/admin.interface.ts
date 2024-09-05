@@ -1,4 +1,5 @@
 import { Model } from 'mongoose';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 
 export type UserName = {
   firstName: string;
@@ -13,7 +14,7 @@ export type IAdmin = {
   email: string;
   socialSecurityNo: string;
   contactNo: string;
-  gender?: 'male' | 'female';
+  role: ENUM_USER_ROLE.SUPER_ADMIN | ENUM_USER_ROLE.ADMIN;
 };
 
 export type AdminModel = Model<IAdmin, Record<string, unknown>>;
@@ -23,5 +24,4 @@ export type IAdminFilters = {
   id?: string;
   email?: string;
   contactNo?: string;
-  gender?: 'male' | 'female';
 };

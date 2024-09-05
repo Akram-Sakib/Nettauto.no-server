@@ -30,7 +30,7 @@ const createPrivateCustomer: RequestHandler = catchAsync(
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'PrivateCustomer created successfully!',
+      message: 'Private Customer created successfully!',
       data: result,
     });
   }
@@ -44,7 +44,7 @@ const createAdmin: RequestHandler = catchAsync(
     sendResponse<IUser>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: 'Admin created successfully!',
+      message: 'Admin Created Successfully!',
       data: result,
     });
   }

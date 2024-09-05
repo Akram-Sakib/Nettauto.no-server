@@ -15,7 +15,7 @@ const getSingleAdmin = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IAdmin>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Admin fetched successfully !',
+    message: 'Admin Fetched Successfully!',
     data: result,
   });
 });

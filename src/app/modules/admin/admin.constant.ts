@@ -18,3 +18,5 @@ export const adminSearchableFields = [
   'name.lastName',
   'name.middleName',
 ];
+
+export const role = ["admin", 'super_admin'];

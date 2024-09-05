@@ -30,7 +30,7 @@ export type IAuction = {
   minimumPrice: string
   fuel: string
   descriptionCondition: string
-  equipment: string
+  equipment: string[]
   documents: IDocuments[]
   auctionTime: string
   status: IStatus
