@@ -62,10 +62,14 @@ export const BusinessCustomerSchema = new Schema<IBusinessCustomer, BusinessMode
       default: false,
     },
     activeAs: {
-      type: String
+      type: String,
     },
     profileImage: {
       type: String,
+    },
+    admin: {
+      type: String,
+      ref: "admin"
     },
   },
   {

@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../../config';
 import { IUser, UserModel } from './user.interface';
+import { accountStatus } from './user.constant';
 
 const UserSchema = new Schema<IUser, UserModel>(
   {
@@ -19,6 +20,11 @@ const UserSchema = new Schema<IUser, UserModel>(
       type: String,
       required: true,
       select: 0,
+    },
+    accountStatus: {
+      type: String,
+      required: true,
+      enum: accountStatus,
     },
     passwordChangedAt: {
       type: Date,

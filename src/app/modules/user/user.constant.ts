@@ -1,0 +1,3 @@
+import { ENUM_ACCOUNT_STATUS } from "../../../enums/user";
+
+export const accountStatus = [ENUM_ACCOUNT_STATUS.ACTIVE, ENUM_ACCOUNT_STATUS.PENDING, ENUM_ACCOUNT_STATUS.BLOCKED];

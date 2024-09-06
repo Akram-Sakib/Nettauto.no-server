@@ -1,4 +1,5 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { IAdmin } from '../admin/admin.interface';
 
 export type UserName = {
   firstName: string;
@@ -22,7 +23,7 @@ export type IPrivateCustomer = {
   isBuyer: boolean
   activeAs: "seller" | "buyer"
   profileImage?: string;
-
+  admin?: Types.ObjectId | IAdmin
 };
 
 export type PrivateCustomerModel = Model<IPrivateCustomer, Record<string, unknown>>;

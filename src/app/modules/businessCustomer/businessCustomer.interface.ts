@@ -1,4 +1,5 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { IAdmin } from '../admin/admin.interface';
 
 export type IBusinessCustomer = {
   id: string;
@@ -19,6 +20,7 @@ export type IBusinessCustomer = {
   isSeller: boolean
   isBuyer: boolean
   activeAs: "seller" | "buyer"
+  admin?: Types.ObjectId | IAdmin
   profileImage?: string;
 };
 

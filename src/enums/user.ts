@@ -5,3 +5,10 @@ export enum ENUM_USER_ROLE {
   BUSINESSCUSTOMER = 'business_customer',
   PRIVATECUSTOMER = 'private_customer',
 }
+
+
+export enum ENUM_ACCOUNT_STATUS {
+  ACTIVE = "active",
+  PENDING = "pending",
+  BLOCKED = "blocked"
+}

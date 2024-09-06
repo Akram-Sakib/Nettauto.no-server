@@ -1,33 +1,32 @@
-import { SortOrder, Types } from 'mongoose';
+import { SortOrder } from 'mongoose';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { AuctionSearchableFields } from './auction.constants';
+import { BidSearchableFields } from './bid.constants';
 import {
-  IAuction,
-  IAuctionFilters,
-  IDocuments,
-} from './auction.interfaces';
-import { Auction } from './auction.model';
+  IBid,
+  IBidFilters
+} from './bid.interfaces';
+import { Bid } from './bid.model';
 
-const createAuction = async (auctionData: IAuction) => {
+const createBid = async (BidData: IBid) => {
 
-  const auction = new Auction(auctionData);
-  return await auction.save();
+  const Bid = new Bid(BidData);
+  return await Bid.save();
 }
 
-const getSingleAuction = async (
+const getSingleBid = async (
   id: string
-): Promise<IAuction | null> => {
-  const result = await Auction.findById(id)
+): Promise<IBid | null> => {
+  const result = await Bid.findById(id)
 
   return result;
 };
 
-const getAllAuctions = async (
-  filters: IAuctionFilters,
+const getAllBids = async (
+  filters: IBidFilters,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<IAuction[]>> => {
+): Promise<IGenericResponse<IBid[]>> => {
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
@@ -39,7 +38,7 @@ const getAllAuctions = async (
   // Search needs $or for searching in specified fields
   if (searchTerm) {
     andConditions.push({
-      $or: AuctionSearchableFields.map(field => ({
+      $or: BidSearchableFields.map(field => ({
         [field]: {
           $regex: searchTerm,
           $paginationOptions: 'i',
@@ -67,13 +66,13 @@ const getAllAuctions = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const result = await Auction.find(whereConditions)
-    // .populate('auction')
+  const result = await Bid.find(whereConditions)
+    // .populate('Bid')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
 
-  const total = await Auction.countDocuments(whereConditions);
+  const total = await Bid.countDocuments(whereConditions);
 
   return {
     meta: {
@@ -85,20 +84,20 @@ const getAllAuctions = async (
   };
 };
 
-const updateAuction = async (
-  id: string, data: Partial<IAuction>, images?: Express.Multer.File[]
-): Promise<IAuction | null> => {
-  const auction = await Auction.findById(id);
-  if (!auction) throw new Error('Auction not found');
+const updateBid = async (
+  id: string, data: Partial<IBid>, images?: Express.Multer.File[]
+): Promise<IBid | null> => {
+  const Bid = await Bid.findById(id);
+  if (!Bid) throw new Error('Bid not found');
 
   if (images) {
     const imageUrls = images.map((image) => image.path);
-    auction.carDetails.images.push(...imageUrls);
+    Bid.carDetails.images.push(...imageUrls);
   }
-  Object.assign(auction, data);
+  Object.assign(Bid, data);
 
-  return auction.save();
-  // const result = await Auction.findOneAndUpdate(
+  return Bid.save();
+  // const result = await Bid.findOneAndUpdate(
   //   { _id: id },
   //   payload,
   //   {
@@ -109,32 +108,32 @@ const updateAuction = async (
   // return result;
 };
 
-// async updateAuction(id: string, data: Partial<IAuction>, images ?: Express.Multer.File[]) {
-//   const auction = await AuctionModel.findById(id);
-//   if (!auction) throw new Error('Auction not found');
+// async updateBid(id: string, data: Partial<IBid>, images ?: Express.Multer.File[]) {
+//   const Bid = await BidModel.findById(id);
+//   if (!Bid) throw new Error('Bid not found');
 
 //   if (images) {
 //     const imageUrls = images.map((image) => image.path);
-//     auction.images.push(...imageUrls);
+//     Bid.images.push(...imageUrls);
 //   }
 
-//   Object.assign(auction, data);
-//   return auction.save();
+//   Object.assign(Bid, data);
+//   return Bid.save();
 // }
 
-const deleteAuction = async (
+const deleteBid = async (
   id: string
-): Promise<IAuction | null> => {
-  const result = await Auction.findByIdAndDelete(id);
+): Promise<IBid | null> => {
+  const result = await Bid.findByIdAndDelete(id);
   return result;
 };
 
 
 
-export const AuctionService = {
-  createAuction,
-  getSingleAuction,
-  getAllAuctions,
-  updateAuction,
-  deleteAuction,
+export const BidService = {
+  createBid,
+  getSingleBid,
+  getAllBids,
+  updateBid,
+  deleteBid,
 };

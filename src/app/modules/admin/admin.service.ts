@@ -10,7 +10,7 @@ import { adminSearchableFields } from './admin.constant';
 import { IAdmin, IAdminFilters } from './admin.interface';
 import { Admin } from './admin.model';
 
-const getSingleAdmin = async (id: string): Promise<IAdmin | null> => {
+const getSingleAdmin = async (id: Types.ObjectId): Promise<IAdmin | null> => {
   const result = await Admin.findById(id);
   console.log(result);
 

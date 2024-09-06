@@ -65,6 +65,10 @@ const PrivateCustomerSchema = new Schema<IPrivateCustomer, PrivateCustomerModel>
     activeAs: {
       type: String
     },
+    admin: {
+      type: String,
+      ref: "admin"
+    },
     profileImage: {
       type: String,
     },

@@ -9,7 +9,7 @@ import { IAdmin } from './admin.interface';
 import { AdminService } from './admin.service';
 
 const getSingleAdmin = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as any;
   const result = await AdminService.getSingleAdmin(id);
 
   sendResponse<IAdmin>(res, {
@@ -36,7 +36,7 @@ const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateAdmin = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = req.params.id as any;
   const updatedData = req.body;
 
   const result = await AdminService.updateAdmin(id, updatedData);
