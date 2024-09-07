@@ -4,7 +4,7 @@ import {
   AuctionModel,
   IAuction,
   IAuctionStatus,
-  IDocuments,
+  IDocuments
 } from './auction.interfaces';
 
 const DocumentSchema = new Schema<IDocuments>({
@@ -17,7 +17,7 @@ const AuctionSchema = new Schema<
   AuctionModel
 >(
   {
-    sellerDetails: { type: Schema.Types.ObjectId, ref: 'user', required: true },
+    sellerDetails: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     carDetails: {
       carRegistrationNo: {
         type: String,
@@ -94,7 +94,7 @@ const AuctionSchema = new Schema<
       },
       startTime: { type: Date, required: true },
       endTime: { type: Date, required: true },
-      status: { type: String, enum: AUCTION_STATUS }, // 
+      status: { type: String, enum: AUCTION_STATUS, required: true, default: IAuctionStatus.AWAITING_APPROVAL }, // 
       bids: [{ type: Schema.Types.ObjectId, ref: 'bids' }], // Reference to bids
     },
     buyerDetails: { type: Schema.Types.ObjectId, ref: 'user' }

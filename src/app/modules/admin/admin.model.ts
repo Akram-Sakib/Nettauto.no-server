@@ -4,11 +4,6 @@ import { role } from './admin.constant';
 
 const AdminSchema = new Schema<IAdmin, AdminModel>(
   {
-    // id: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    // },
     name: {
       type: {
         firstName: {

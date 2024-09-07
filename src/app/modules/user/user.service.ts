@@ -57,6 +57,13 @@ const createBusinessCustomer = async (
     }
     newUserAllData = newUser[0];
 
+    // Set userId reference to businessCustomer after user is created
+    await BusinessCustomer.findByIdAndUpdate(
+      newBusinessCustomer[0]._id,
+      { userId: newUserAllData._id }, // Assuming the businessCustomer model has a userId field
+      { session }
+    );
+
     await session.commitTransaction();
     await session.endSession();
   } catch (error) {
@@ -118,6 +125,12 @@ const createPrivateCustomer = async (
       throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create privateCustomer');
     }
     newUserAllData = newUser[0];
+
+    await BusinessCustomer.findByIdAndUpdate(
+      newPrivateCustomer[0]._id,
+      { userId: newUserAllData._id },
+      { session }
+    );
 
     await session.commitTransaction();
     await session.endSession();

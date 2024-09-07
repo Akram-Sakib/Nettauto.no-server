@@ -11,7 +11,7 @@ import { IAdmin, IAdminFilters } from './admin.interface';
 import { Admin } from './admin.model';
 
 const getSingleAdmin = async (id: Types.ObjectId): Promise<IAdmin | null> => {
-  const result = await Admin.findById(id);
+  const result = await Admin.findById(id).populate("user");
   console.log(result);
 
   return result;

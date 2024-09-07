@@ -3,11 +3,6 @@ import { IPrivateCustomer, PrivateCustomerModel } from './privateCustomer.interf
 
 const PrivateCustomerSchema = new Schema<IPrivateCustomer, PrivateCustomerModel>(
   {
-    // id: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    // },
     name: {
       type: String,
       required: true,
@@ -72,6 +67,7 @@ const PrivateCustomerSchema = new Schema<IPrivateCustomer, PrivateCustomerModel>
     profileImage: {
       type: String,
     },
+    userId: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   {
     timestamps: true,

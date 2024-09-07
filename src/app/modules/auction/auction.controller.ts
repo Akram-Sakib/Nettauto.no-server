@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import { paginationFields } from '../../../constants/pagination';
 import ApiError from '../../../errors/ApiError';
 import catchAsync from '../../../shared/catchAsync';
@@ -12,22 +13,35 @@ import { AuctionValidation } from './auction.validations';
 
 const createAuction = catchAsync(async (req: Request, res: Response) => {
   const files = req.files;
-  // console.log(req.body.equipment);
-  
+  const userId = (req.user as JwtPayload).userId;
+
+  const { carDetails, auctionDetails, buyerDetails } = req.body
+
   if (!files) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
       "File isn't Upload Properly",
     );
-  } else {
-    // @ts-ignore
-    req.body.images = files.images.map((file) => file.path);
-    // @ts-ignore
-    req.body.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
   }
-  await AuctionValidation.createAuctionZodSchema.parseAsync(req.body);
 
-  const result = await AuctionService.createAuction(req.body);
+  // @ts-ignore
+  carDetails.images = files.images.map((file) => file.path);
+  // @ts-ignore
+  carDetails.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
+
+
+  const auctionData = {
+    sellerDetails: userId,
+    carDetails: {
+      ...carDetails,
+    },
+    auctionDetails,
+    buyerDetails,
+  };
+
+  await AuctionValidation.createAuctionZodSchema.parseAsync(auctionData);
+
+  const result = await AuctionService.createAuction(auctionData);
 
   sendResponse<IAuction>(res, {
     statusCode: httpStatus.OK,
@@ -68,8 +82,14 @@ const getAllAuctions = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateAuction = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await AuctionService.updateAuction(id, req.body);
+
+  const { auctionId } = req.params;
+  const files = req.files;
+  const userId = (req.user as JwtPayload).userId;
+  const auctionData = req.body;
+
+
+  const result = await AuctionService.updateAuction(auctionId, auctionData, files, userId);
 
   sendResponse<IAuction>(res, {
     statusCode: httpStatus.OK,

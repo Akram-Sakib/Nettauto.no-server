@@ -3,40 +3,34 @@ import uploadToCloudinary from '../../../config/cloudinary';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
-import { BidController } from './bid.controller';
-import { BidValidation } from './bid.validations';
+import { NotificationController } from './notification.controller';
+import { NotificationValidation } from './notification.validations';
 
 const router = express.Router();
 
 router.post(
-  '/create-Bid',
-  uploadToCloudinary("Bid", [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "application/pdf",
-  ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
+  '/create-Notification',
   // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
-  BidController.createBid
+  NotificationController.createNotification
 );
 
-router.get('/:id', BidController.getSingleBid);
+router.get('/:id', NotificationController.getSingleNotification);
 
-router.get('/', BidController.getAllBids);
+router.get('/', NotificationController.getAllNotifications);
 
 router.patch(
   '/:id',
   validateRequest(
-    BidValidation.updateBidZodSchema
+    NotificationValidation.updateNotificationZodSchema
   ),
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  BidController.updateBid
+  NotificationController.updateNotification
 );
 
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN),
-  BidController.deleteBid
+  NotificationController.deleteNotification
 );
 
-export const BidRoutes = router;
+export const NotificationRoutes = router;

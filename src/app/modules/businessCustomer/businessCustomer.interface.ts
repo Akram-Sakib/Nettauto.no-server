@@ -22,6 +22,7 @@ export type IBusinessCustomer = {
   activeAs: "seller" | "buyer"
   admin?: Types.ObjectId | IAdmin
   profileImage?: string;
+  userId?: Types.ObjectId; 
 };
 
 export type BusinessModel = Model<IBusinessCustomer, Record<string, unknown>>;

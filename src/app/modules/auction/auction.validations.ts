@@ -1,33 +1,42 @@
 import { z } from 'zod';
+import { AUCTION_STATUS } from './auction.constants';
 // Zod schema for IDocuments
-const DocumentSchema = z.object({
-  originalname: z.string().nonempty("Title is required"),
-  path: z.string().nonempty("PDF link is required"),
+
+const documentSchema = z.object({
+  originalname: z.string(),
+  path: z.string(),
 });
 
-// Zod schema for IAuction
 const createAuctionZodSchema = z.object({
-  carRegistrationNo: z.string().nonempty("Auction registration number is required"),
-  place: z.string().nonempty("Place is required"),
-  description: z.string().nonempty("Description is required"),
-  images: z.array(z.string().url().nonempty("Image URL is required")),
-  brand: z.string().nonempty("Brand is required"),
-  model: z.string().nonempty("Model is required"),
-  yearModel: z.string().nonempty("Year model is required"),
-  kilometer: z.string().nonempty("Kilometer is required"),
-  cylinderVolume: z.string().nonempty("Cylinder volume is required"),
-  effect: z.string().nonempty("Effect is required"),
-  color: z.string().nonempty("Color is required"),
-  gearType: z.string().nonempty("Gear type is required"),
-  operatingType: z.string().nonempty("Operating type is required"),
-  minimumPrice: z.string().nonempty("Minimum price is required"),
-  fuel: z.string().nonempty("Fuel type is required"),
-  descriptionCondition: z.string().nonempty("Condition description is required"),
-  equipment: z.array(z.string().nonempty("Equipment is required")),
-  documents: z.array(DocumentSchema),
-  auctionTime: z.string().nonempty("Auction time is required")
+  carDetails: z.object({
+    carRegistrationNo: z.string().min(1, 'Car registration number is required'),
+    place: z.string().min(1, 'Place is required'),
+    description: z.string().min(10, 'Description must be at least 10 characters'),
+    images: z.array(z.string()).min(1, 'At least one image is required'),
+    brand: z.string().min(1, 'Brand is required'),
+    model: z.string().min(1, 'Model is required'),
+    yearModel: z.string().min(1, 'Year model is required'),
+    kilometer: z.string().min(1, 'Kilometer is required'),
+    cylinderVolume: z.string().min(1, 'Cylinder volume is required'),
+    effect: z.string().min(1, 'Effect is required'),
+    color: z.string().min(1, 'Color is required'),
+    gearType: z.string().min(1, 'Gear type is required'),
+    operatingType: z.string().min(1, 'Operating type is required'),
+    fuel: z.string().min(1, 'Fuel type is required'),
+    descriptionCondition: z.string().min(10, 'Condition description must be at least 10 characters'),
+    equipment: z.array(z.string()).optional(),
+    documents: z.array(documentSchema).optional(),
+  }),
+  auctionDetails: z.object({
+    minimumPrice: z.number().min(1, 'Minimum price is required'),
+    startTime: z.coerce.date({
+      required_error: "Start Time is required"
+    }),
+    endTime: z.coerce.date({
+      required_error: "End Time is required"
+    }),
+  }),
 });
-
 
 const updateAuctionZodSchema = createAuctionZodSchema.partial();
 

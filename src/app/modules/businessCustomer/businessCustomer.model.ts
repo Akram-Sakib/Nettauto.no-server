@@ -70,7 +70,8 @@ export const BusinessCustomerSchema = new Schema<IBusinessCustomer, BusinessMode
     admin: {
       type: String,
       ref: "admin"
-    },
+    }, 
+    userId: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   {
     timestamps: true,

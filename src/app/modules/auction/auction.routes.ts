@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import uploadToCloudinary from '../../../config/cloudinary';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
@@ -10,17 +10,17 @@ const router = express.Router();
 
 router.post(
   '/create-auction',
-  // validateRequest(
-  //   AuctionValidation.createAuctionZodSchema
-  // ),
+  auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
   uploadToCloudinary("auction", [
     "image/jpeg",
     "image/jpg",
     "image/png",
     "application/pdf",
   ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
-  // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
-  AuctionController.createAuction
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data)
+    return AuctionController.createAuction(req, res, next)
+  }
 );
 
 router.get('/:id', AuctionController.getSingleAuction);
@@ -28,12 +28,18 @@ router.get('/:id', AuctionController.getSingleAuction);
 router.get('/', AuctionController.getAllAuctions);
 
 router.patch(
-  '/:id',
-  validateRequest(
-    AuctionValidation.updateAuctionZodSchema
-  ),
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  AuctionController.updateAuction
+  '/:auctionId',
+  auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
+  uploadToCloudinary('auction', [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'application/pdf',
+  ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return AuctionController.updateAuction(req, res, next);
+  }
 );
 
 router.delete(

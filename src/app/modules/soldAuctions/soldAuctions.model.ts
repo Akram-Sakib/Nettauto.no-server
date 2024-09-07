@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { AUCTION_COLLECTION, AUCTION_STATUS } from './soldAuctions.constants';
+import { AUCTION_COLLECTION } from './soldAuctions.constants';
 import {
   ISoldAuction,
   SoldAuctionModel

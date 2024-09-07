@@ -24,6 +24,7 @@ export type IPrivateCustomer = {
   activeAs: "seller" | "buyer"
   profileImage?: string;
   admin?: Types.ObjectId | IAdmin
+  userId?: Types.ObjectId;
 };
 
 export type PrivateCustomerModel = Model<IPrivateCustomer, Record<string, unknown>>;
