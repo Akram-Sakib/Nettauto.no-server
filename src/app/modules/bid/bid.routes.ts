@@ -10,12 +10,6 @@ const router = express.Router();
 
 router.post(
   '/create-Bid',
-  uploadToCloudinary("Bid", [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "application/pdf",
-  ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
   // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
   BidController.createBid
 );

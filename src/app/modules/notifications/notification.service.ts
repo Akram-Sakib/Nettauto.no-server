@@ -11,8 +11,8 @@ import { Notification } from './notification.model';
 
 const createNotification = async (NotificationData: INotification) => {
 
-  const Notification = new Notification(NotificationData);
-  return await Notification.save();
+  const result = new Notification(NotificationData);
+  return await result.save();
 }
 
 const getSingleNotification = async (
@@ -87,16 +87,12 @@ const getAllNotifications = async (
 const updateNotification = async (
   id: string, data: Partial<INotification>, images?: Express.Multer.File[]
 ): Promise<INotification | null> => {
-  const Notification = await Notification.findById(id);
-  if (!Notification) throw new Error('Notification not found');
+  const result = await Notification.findById(id);
+  if (!result) throw new Error('Notification not found');
 
-  if (images) {
-    const imageUrls = images.map((image) => image.path);
-    Notification.carDetails.images.push(...imageUrls);
-  }
-  Object.assign(Notification, data);
+  Object.assign(result, data);
 
-  return Notification.save();
+  return result.save();
   // const result = await Notification.findOneAndUpdate(
   //   { _id: id },
   //   payload,

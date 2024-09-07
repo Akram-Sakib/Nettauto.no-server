@@ -11,20 +11,6 @@ import { BidService } from './bid.service';
 import { BidValidation } from './bid.validations';
 
 const createBid = catchAsync(async (req: Request, res: Response) => {
-  const files = req.files;
-  // console.log(req.body.equipment);
-
-  if (!files) {
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "File isn't Upload Properly",
-    );
-  } else {
-    // @ts-ignore
-    req.body.images = files.images.map((file) => file.path);
-    // @ts-ignore
-    req.body.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
-  }
   await BidValidation.createBidZodSchema.parseAsync(req.body);
 
   const result = await BidService.createBid(req.body);

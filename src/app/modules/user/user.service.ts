@@ -10,6 +10,7 @@ import { IPrivateCustomer } from '../privateCustomer/privateCustomer.interface';
 import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
+import { ENUM_ACCOUNT_STATUS } from '../../../enums/user';
 
 
 const createBusinessCustomer = async (
@@ -23,6 +24,7 @@ const createBusinessCustomer = async (
 
   // set role
   user.role = 'business_customer';
+  user.accountStatus = ENUM_ACCOUNT_STATUS.PENDING;
   businessCustomer.email = user.email
 
   const isBusinessCustomerAlreadyExist = await BusinessCustomer.findOne({
@@ -76,17 +78,6 @@ const createBusinessCustomer = async (
     newUserAllData = await User.findById(newUserAllData._id)
       .populate({
         path: 'businessCustomer',
-        // populate: [
-        //   {
-        //     path: 'Semester',
-        //   },
-        //   {
-        //     path: 'Auction',
-        //   },
-        //   {
-        //     path: 'PrivateCustomer',
-        //   },
-        // ],
       });
   }
 
@@ -104,6 +95,7 @@ const createPrivateCustomer = async (
 
   // set role
   user.role = 'private_customer';
+  user.accountStatus = ENUM_ACCOUNT_STATUS.PENDING;
   privateCustomer.email = user.email
 
   let newUserAllData = null;
@@ -143,14 +135,6 @@ const createPrivateCustomer = async (
   if (newUserAllData) {
     newUserAllData = await User.findById(newUserAllData._id).populate({
       path: 'privateCustomer',
-      // populate: [
-      //   {
-      //     path: 'Auction',
-      //   },
-      //   {
-      //     path: 'PrivateCustomer',
-      //   },
-      // ],
     });
   };
 
@@ -167,6 +151,7 @@ const createAdmin = async (
     user.password = config.default_admin_pass as string;
   }
   // set role
+  user.accountStatus = ENUM_ACCOUNT_STATUS.ACTIVE;
   user.role = admin.role;
 
   let newUserAllData = null;

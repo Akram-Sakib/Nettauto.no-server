@@ -2,9 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import uploadToCloudinary from '../../../config/cloudinary';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
-import validateRequest from '../../middlewares/validateRequest';
 import { AuctionController } from './auction.controller';
-import { AuctionValidation } from './auction.validations';
 
 const router = express.Router();
 

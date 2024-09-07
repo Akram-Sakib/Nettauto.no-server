@@ -11,20 +11,7 @@ import { SoldAuctionService } from './soldAuctions.service';
 import { SoldAuctionValidation } from './soldAuctions.validations';
 
 const createSoldAuction = catchAsync(async (req: Request, res: Response) => {
-  const files = req.files;
-  // console.log(req.body.equipment);
 
-  if (!files) {
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "File isn't Upload Properly",
-    );
-  } else {
-    // @ts-ignore
-    req.body.images = files.images.map((file) => file.path);
-    // @ts-ignore
-    req.body.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
-  }
   await SoldAuctionValidation.createSoldAuctionZodSchema.parseAsync(req.body);
 
   const result = await SoldAuctionService.createSoldAuction(req.body);

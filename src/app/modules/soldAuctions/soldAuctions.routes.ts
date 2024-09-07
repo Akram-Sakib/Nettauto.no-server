@@ -13,12 +13,6 @@ router.post(
   // validateRequest(
   //   SoldAuctionValidation.createSoldAuctionZodSchema
   // ),
-  uploadToCloudinary("soldAuction", [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "application/pdf",
-  ]).fields([{ name: 'images', maxCount: 5 }, { name: 'pdfs', maxCount: 5 }]),
   // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
   SoldAuctionController.createSoldAuction
 );

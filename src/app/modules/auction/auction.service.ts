@@ -13,7 +13,36 @@ import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 import { AuctionValidation } from './auction.validations';
 
-const createAuction = async (auctionData: IAuction) => {
+const createAuction = async (data: IAuction, files: any,
+  userId: Types.ObjectId): Promise<IAuction> => {
+
+  const { carDetails, auctionDetails, buyerDetails } = data
+
+  if (!files) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "File isn't Upload Properly",
+    );
+  }
+
+  // @ts-ignore
+  carDetails.images = files.images.map((file) => file.path);
+  // @ts-ignore
+  carDetails.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
+
+
+  const auctionData = {
+    sellerDetails: userId,
+    carDetails: {
+      ...carDetails,
+    },
+    auctionDetails,
+    buyerDetails,
+  };
+
+  await AuctionValidation.createAuctionZodSchema.parseAsync(auctionData);
+
+
   auctionData.auctionDetails.status = IAuctionStatus.AWAITING_APPROVAL
   const auction = await Auction.create(auctionData);
 
@@ -170,10 +199,10 @@ const updateAuction = async (
       ...existingAuction.auctionDetails,
       ...auctionData.auctionDetails,
     },
-    buyerDetails: {
-      ...existingAuction.buyerDetails,
-      ...auctionData.buyerDetails,
-    },
+    // buyerDetails: {
+    //   ...existingAuction.buyerDetails,
+    //   ...auctionData.buyerDetails,
+    // },
     sellerDetails: userId, // Ensure seller remains consistent
   };
 

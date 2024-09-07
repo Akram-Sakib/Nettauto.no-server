@@ -11,8 +11,8 @@ import { Bid } from './bid.model';
 
 const createBid = async (BidData: IBid) => {
 
-  const Bid = new Bid(BidData);
-  return await Bid.save();
+  const result = new Bid(BidData);
+  return await result.save();
 }
 
 const getSingleBid = async (
@@ -87,16 +87,12 @@ const getAllBids = async (
 const updateBid = async (
   id: string, data: Partial<IBid>, images?: Express.Multer.File[]
 ): Promise<IBid | null> => {
-  const Bid = await Bid.findById(id);
-  if (!Bid) throw new Error('Bid not found');
+  const result = await Bid.findById(id);
+  if (!result) throw new Error('Bid not found');
 
-  if (images) {
-    const imageUrls = images.map((image) => image.path);
-    Bid.carDetails.images.push(...imageUrls);
-  }
-  Object.assign(Bid, data);
+  Object.assign(result, data);
 
-  return Bid.save();
+  return result.save();
   // const result = await Bid.findOneAndUpdate(
   //   { _id: id },
   //   payload,

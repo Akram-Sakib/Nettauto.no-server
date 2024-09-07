@@ -80,13 +80,8 @@ const createPrivateCustomerZodSchema = z.object({
           message: "Minst 1 symbol (!“#$%&‘()*+,-./:;<=>?@[]^_`{|}~)",
         }),
       privateCustomer: z.object({
-        name: z.object({
-          firstName: z.string({
-            required_error: "First Name is required"
-          }),
-          lastName: z.string({
-            required_error: "Last Name is required"
-          })
+        name: z.string({
+          required_error: 'Name is required',
         }),
         dateOfBirth: z.coerce.date({
           required_error: 'Date of birth is required',

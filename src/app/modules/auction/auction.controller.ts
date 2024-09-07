@@ -2,46 +2,19 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
 import { paginationFields } from '../../../constants/pagination';
-import ApiError from '../../../errors/ApiError';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { AuctionFilterableFields } from './auction.constants';
 import { IAuction } from './auction.interfaces';
 import { AuctionService } from './auction.service';
-import { AuctionValidation } from './auction.validations';
 
 const createAuction = catchAsync(async (req: Request, res: Response) => {
   const files = req.files;
   const userId = (req.user as JwtPayload).userId;
+  const auctionData = req.body;
 
-  const { carDetails, auctionDetails, buyerDetails } = req.body
-
-  if (!files) {
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "File isn't Upload Properly",
-    );
-  }
-
-  // @ts-ignore
-  carDetails.images = files.images.map((file) => file.path);
-  // @ts-ignore
-  carDetails.documents = files.pdfs.map((file) => ({ originalname: file.originalname, path: file.path }));
-
-
-  const auctionData = {
-    sellerDetails: userId,
-    carDetails: {
-      ...carDetails,
-    },
-    auctionDetails,
-    buyerDetails,
-  };
-
-  await AuctionValidation.createAuctionZodSchema.parseAsync(auctionData);
-
-  const result = await AuctionService.createAuction(auctionData);
+  const result = await AuctionService.createAuction(auctionData, files, userId);
 
   sendResponse<IAuction>(res, {
     statusCode: httpStatus.OK,

@@ -90,10 +90,6 @@ const updateSoldAuction = async (
   const soldAuction = await SoldAuction.findById(id);
   if (!soldAuction) throw new Error('SoldAuction not found');
 
-  if (images) {
-    const imageUrls = images.map((image) => image.path);
-    soldAuction.carDetails.images.push(...imageUrls);
-  }
   Object.assign(soldAuction, data);
 
   return soldAuction.save();
