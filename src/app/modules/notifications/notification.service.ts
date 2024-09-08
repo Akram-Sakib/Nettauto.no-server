@@ -104,18 +104,6 @@ const updateNotification = async (
   // return result;
 };
 
-// async updateNotification(id: string, data: Partial<INotification>, images ?: Express.Multer.File[]) {
-//   const Notification = await NotificationModel.findById(id);
-//   if (!Notification) throw new Error('Notification not found');
-
-//   if (images) {
-//     const imageUrls = images.map((image) => image.path);
-//     Notification.images.push(...imageUrls);
-//   }
-
-//   Object.assign(Notification, data);
-//   return Notification.save();
-// }
 
 const deleteNotification = async (
   id: string

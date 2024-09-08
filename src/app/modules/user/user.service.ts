@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import config from '../../../config/index';
+import { ENUM_ACCOUNT_STATUS } from '../../../enums/user';
 import ApiError from '../../../errors/ApiError';
 import { IAdmin } from '../admin/admin.interface';
 import { Admin } from '../admin/admin.model';
@@ -10,7 +11,7 @@ import { IPrivateCustomer } from '../privateCustomer/privateCustomer.interface';
 import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
 import { IUser } from './user.interface';
 import { User } from './user.model';
-import { ENUM_ACCOUNT_STATUS } from '../../../enums/user';
+import { BusinessCustomerService } from '../businessCustomer/businessCustomer.service';
 
 
 const createBusinessCustomer = async (
@@ -192,19 +193,64 @@ const createAdmin = async (
   if (newUserAllData) {
     newUserAllData = await User.findById(newUserAllData._id).populate({
       path: 'admin',
-      // populate: [
-      //   {
-      //     path: 'managementAuction',
-      //   },
-      // ],
     });
   }
 
   return newUserAllData;
 };
 
+const updateUserAccountStatusAndAdmin = async (
+  userId: string,
+  adminId: mongoose.Types.ObjectId,
+  accountStatus: ENUM_ACCOUNT_STATUS
+) => {
+
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  if (user.businessCustomer) {
+    await BusinessCustomer.findOneAndUpdate({ userId }, {
+      admin: adminId
+    }, {
+      new: true
+    })
+    return await User.findByIdAndUpdate(userId, {
+      $set: {
+        accountStatus: accountStatus,
+      }
+    }, { new: true }).populate('businessCustomer')
+  }
+  else if (user.privateCustomer) {
+    await PrivateCustomer.findOneAndUpdate({ userId }, {
+      admin: adminId
+    }, {
+      new: true
+    })
+    return await User.findByIdAndUpdate(userId, {
+      $set: {
+        accountStatus: accountStatus,
+      }
+    }, { new: true }).populate('privateCustomer')
+  }
+};
+
+const getAllUsers = async () => {
+  // Fetch all users from the database, and populate the `businessCustomer` and `privateCustomer` if needed
+  const users = await User.find()
+    .populate('businessCustomer')
+    .populate('privateCustomer')
+    .populate('admin');
+
+  return users;
+
+};
+
 export const UserService = {
   createBusinessCustomer,
   createPrivateCustomer,
   createAdmin,
+  updateUserAccountStatusAndAdmin,
+  getAllUsers
 };

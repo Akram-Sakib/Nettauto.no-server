@@ -25,4 +25,17 @@ router.post(
   UserController.createAdmin
 );
 
+router.post(
+  '/update-user/:id',
+  // validateRequest(UserValidation.createAdminZodSchema),
+  // auth(ENUM_USER_ROLE.ADMIN),
+  UserController.updateUserAccountStatusAndAdmin
+);
+router.get(
+  '/',
+  // validateRequest(UserValidation.createAdminZodSchema),
+  // auth(ENUM_USER_ROLE.ADMIN),
+  UserController.getAllUsersController
+);
+
 export const UserRoutes = router;

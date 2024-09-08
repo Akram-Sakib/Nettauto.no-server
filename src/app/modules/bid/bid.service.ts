@@ -1,24 +1,26 @@
+import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import { Auction } from '../auction/auction.model';
+import { BusinessCustomer } from '../businessCustomer/businessCustomer.model';
+import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
 import { BidSearchableFields } from './bid.constants';
 import {
   IBid,
   IBidFilters
 } from './bid.interfaces';
 import { Bid } from './bid.model';
-import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
-import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
-import { BusinessCustomer } from '../businessCustomer/businessCustomer.model';
-import { Auction } from '../auction/auction.model';
 
 
 const createBid = async (userId: string, bidData: IBid): Promise<IBid> => {
   // Find the user in either PrivateCustomer or BusinessCustomer
-  const privateCustomer = await PrivateCustomer.findOne({ userId });
-  const businessCustomer = await BusinessCustomer.findOne({ userId });
+  const privateCustomer = await PrivateCustomer.findOne({ userId }).lean();
+  const businessCustomer = await BusinessCustomer.findOne({ userId }).lean();
+  console.log(userId, privateCustomer, businessCustomer);
+
   const activeCustomer = privateCustomer || businessCustomer;
 
   if (!activeCustomer) {
@@ -127,23 +129,18 @@ const getAllBids = async (
 };
 
 const updateBid = async (
-  id: string, data: Partial<IBid>, images?: Express.Multer.File[]
+  id: string, data: Partial<IBid>
 ): Promise<IBid | null> => {
-  const result = await Bid.findById(id);
-  if (!result) throw new Error('Bid not found');
+  const updatedBid = await Bid.findByIdAndUpdate(id, data, {
+    new: true, // Return the updated document
+    runValidators: true, // Ensure validations are run
+  });
 
-  Object.assign(result, data);
+  if (!updatedBid) {
+    throw new Error('Bid not found');
+  }
 
-  return result.save();
-  // const result = await Bid.findOneAndUpdate(
-  //   { _id: id },
-  //   payload,
-  //   {
-  //     new: true,
-  //   }
-  // );
-
-  // return result;
+  return updatedBid;
 };
 
 const deleteBid = async (

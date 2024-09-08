@@ -13,9 +13,7 @@ import { IPrivateCustomer, IPrivateCustomerFilters } from './privateCustomer.int
 import { PrivateCustomer } from './privateCustomer.model';
 
 const getSinglePrivateCustomer = async (id: string): Promise<IPrivateCustomer | null> => {
-  const result = await PrivateCustomer.findOne({ id })
-    // .populate('Auction')
-    // .populate('PrivateCustomer');
+  const result = await PrivateCustomer.findById(id)
 
   return result;
 };
@@ -60,8 +58,6 @@ const getAllPrivateCustomers = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await PrivateCustomer.find(whereConditions)
-    // .populate('Auction')
-    // .populate('PrivateCustomer')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -82,7 +78,7 @@ const updatePrivateCustomer = async (
   id: string,
   payload: Partial<IPrivateCustomer>
 ): Promise<IPrivateCustomer | null> => {
-  const isExist = await PrivateCustomer.findOne({ id });
+  const isExist = await PrivateCustomer.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'PrivateCustomer not found !');
@@ -98,19 +94,16 @@ const updatePrivateCustomer = async (
     });
   }
 
-  const result = await PrivateCustomer.findOneAndUpdate({ id }, updatedPrivateCustomerData,
+  const result = await PrivateCustomer.findByIdAndUpdate(id, updatedPrivateCustomerData,
     { new: true }
   )
-    // .populate('PrivateCustomer')
-    // .populate('Auction')
-    ;
 
   return result;
 };
 
 const deletePrivateCustomer = async (id: string): Promise<IPrivateCustomer | null> => {
-  // check if the faculty is exist
-  const isExist = await PrivateCustomer.findOne({ id });
+  // check if the privateCustomer is exist
+  const isExist = await PrivateCustomer.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'PrivateCustomer not found !');
@@ -120,9 +113,8 @@ const deletePrivateCustomer = async (id: string): Promise<IPrivateCustomer | nul
 
   try {
     session.startTransaction();
-    //delete faculty first
-    const faculty = await PrivateCustomer.findOneAndDelete({ id }, { session });
-    if (!faculty) {
+    const privateCustomer = await PrivateCustomer.findByIdAndDelete(id, { session });
+    if (!privateCustomer) {
       throw new ApiError(404, 'Failed to delete student');
     }
     //delete user
@@ -130,7 +122,7 @@ const deletePrivateCustomer = async (id: string): Promise<IPrivateCustomer | nul
     session.commitTransaction();
     session.endSession();
 
-    return faculty;
+    return privateCustomer;
   } catch (error) {
     session.abortTransaction();
     throw error;

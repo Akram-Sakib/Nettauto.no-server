@@ -50,9 +50,6 @@ const getAllBusinessCustomers = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await BusinessCustomer.find(whereConditions)
-    // .populate('Semester')
-    // .populate('Auction')
-    // .populate('auction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -70,10 +67,8 @@ const getAllBusinessCustomers = async (
 };
 
 const getSingleBusinessCustomer = async (id: string): Promise<IBusinessCustomer | null> => {
-  const result = await BusinessCustomer.findOne({ id })
-    // .populate('Semester')
-    // .populate('Auction')
-    // .populate('auction');
+  const result = await BusinessCustomer.findById(id)
+
   return result;
 };
 
@@ -81,13 +76,13 @@ const updateBusinessCustomer = async (
   id: string,
   payload: Partial<IBusinessCustomer>
 ): Promise<IBusinessCustomer | null> => {
-  const isExist = await BusinessCustomer.findOne({ id });
+  const isExist = await BusinessCustomer.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'BusinessCustomer not found !');
   }
 
-  const { companyName,  ...businessCustomerData } = payload;
+  const { companyName, ...businessCustomerData } = payload;
 
   const updatedBusinessCustomerData: Partial<IBusinessCustomer> = { ...businessCustomerData };
 
@@ -97,36 +92,17 @@ const updateBusinessCustomer = async (
       (updatedBusinessCustomerData as any)[companyNameKey] = companyName[key as keyof typeof companyName];
     });
   }
-  // if (guardian && Object.keys(guardian).length > 0) {
-  //   Object.keys(guardian).forEach(key => {
-  //     const guardianKey = `guardian.${key}` as keyof Partial<IBusinessCustomer>; // `guardian.fisrtguardian`
-  //     (updatedBusinessCustomerData as any)[guardianKey] =
-  //       guardian[key as keyof typeof guardian];
-  //   });
-  // }
-  // if (localGuardian && Object.keys(localGuardian).length > 0) {
-  //   Object.keys(localGuardian).forEach(key => {
-  //     const localGuradianKey =
-  //       `localGuardian.${key}` as keyof Partial<IBusinessCustomer>; // `localGuardian.fisrtName`
-  //     (updatedBusinessCustomerData as any)[localGuradianKey] =
-  //       localGuardian[key as keyof typeof localGuardian];
-  //   });
-  // }
 
-  const result = await BusinessCustomer.findOneAndUpdate({ id }, updatedBusinessCustomerData, {
+  const result = await BusinessCustomer.findByIdAndUpdate(id, updatedBusinessCustomerData, {
     new: true,
-  })
-    // .populate('auction')
-    // .populate('Auction')
-    // .populate('Semester');
-  ;
+  });
 
   return result;
 };
 
 const deleteBusinessCustomer = async (id: string): Promise<IBusinessCustomer | null> => {
   // check if the businessCustomer is exist
-  const isExist = await BusinessCustomer.findOne({ id });
+  const isExist = await BusinessCustomer.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'BusinessCustomer not found !');
@@ -137,7 +113,7 @@ const deleteBusinessCustomer = async (id: string): Promise<IBusinessCustomer | n
   try {
     session.startTransaction();
     //delete businessCustomer first
-    const businessCustomer = await BusinessCustomer.findOneAndDelete({ id }, { session });
+    const businessCustomer = await BusinessCustomer.findByIdAndDelete(id, { session });
     if (!businessCustomer) {
       throw new ApiError(404, 'Failed to delete businessCustomer');
     }

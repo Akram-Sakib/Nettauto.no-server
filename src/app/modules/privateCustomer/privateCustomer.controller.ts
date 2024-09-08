@@ -24,7 +24,7 @@ const getAllPrivateCustomers = catchAsync(async (req: Request, res: Response) =>
   const filters = pick(req.query, privateCustomerFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
-  const result = await PrivateCustomerService.getAllFaculties(
+  const result = await PrivateCustomerService.getAllPrivateCustomers(
     filters,
     paginationOptions
   );
@@ -64,8 +64,8 @@ const deletePrivateCustomer = catchAsync(async (req: Request, res: Response) => 
 });
 
 export const PrivateCustomerController = {
-  getSinglePrivateCustomer: getSinglePrivateCustomer,
-  getAllFaculties: getAllPrivateCustomers,
+  getSinglePrivateCustomer,
+  getAllPrivateCustomers,
   updatePrivateCustomer,
   deletePrivateCustomer,
 };

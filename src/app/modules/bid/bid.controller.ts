@@ -11,6 +11,7 @@ import { BidService } from './bid.service';
 
 const createBid = catchAsync(async (req: Request, res: Response) => {
   const userId = (req.user as JwtPayload).userId
+
   const result = await BidService.createBid(userId, req.body);
 
   sendResponse<IBid>(res, {

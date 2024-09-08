@@ -7,6 +7,7 @@ const createToken = (
 ): string => {
   return jwt.sign(payload, secret, {
     expiresIn: expireTime,
+    algorithm: 'HS256',
   });
 };
 

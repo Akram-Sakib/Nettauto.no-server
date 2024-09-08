@@ -1,7 +1,5 @@
-export const NotificationFilterableFields = ['searchTerm', 'title'];
+export const NotificationFilterableFields = ['searchTerm', 'message'];
 
-export const NotificationSearchableFields = ['title'];
-
-export const NOTIFICATION_STATUS = ['not_approved', 'live_now', 'awaiting_approval', 'notification_not_accepted', 'under_registration'];
+export const NotificationSearchableFields = ['message'];
 
 export const NOTIFICATION_COLLECTION = 'notification';
