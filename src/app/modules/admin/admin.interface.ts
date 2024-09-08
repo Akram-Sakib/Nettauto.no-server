@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 
 export type UserName = {
@@ -15,6 +15,7 @@ export type IAdmin = {
   socialSecurityNo: string;
   contactNo: string;
   role: ENUM_USER_ROLE.SUPER_ADMIN | ENUM_USER_ROLE.ADMIN;
+  userId?: Types.ObjectId;
 };
 
 export type AdminModel = Model<IAdmin, Record<string, unknown>>;

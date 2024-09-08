@@ -1,5 +1,4 @@
 import express from 'express';
-import uploadToCloudinary from '../../../config/cloudinary';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
@@ -10,7 +9,10 @@ const router = express.Router();
 
 router.post(
   '/create-Bid',
-  // auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
+  auth(ENUM_USER_ROLE.BUSINESSCUSTOMER, ENUM_USER_ROLE.PRIVATECUSTOMER),
+  validateRequest(
+    BidValidation.createBidZodSchema
+  ),
   BidController.createBid
 );
 

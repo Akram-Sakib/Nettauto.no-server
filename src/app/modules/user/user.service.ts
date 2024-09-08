@@ -175,6 +175,12 @@ const createAdmin = async (
     }
     newUserAllData = newUser[0];
 
+    await Admin.findByIdAndUpdate(
+      newAdmin[0]._id,
+      { userId: newUserAllData._id },
+      { session }
+    );
+
     await session.commitTransaction();
     await session.endSession();
   } catch (error) {

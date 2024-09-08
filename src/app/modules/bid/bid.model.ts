@@ -14,7 +14,8 @@ const BidSchema = new Schema<
     auction: { type: Schema.Types.ObjectId, ref: 'Auction', required: true },
     bidAmount: { type: Number, required: true },
     bidTime: { type: Date, required: true },
-    isTopBid: { type: Boolean, required: true },
+    isTopBid: { type: Boolean, required: true, default: false },
+    bidNumber: { type: Number, required: true, unique: true },
   },
   {
     timestamps: true,

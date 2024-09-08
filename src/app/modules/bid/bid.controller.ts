@@ -1,19 +1,17 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/pagination';
-import ApiError from '../../../errors/ApiError';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { BidFilterableFields } from './bid.constants';
 import { IBid } from './bid.interfaces';
 import { BidService } from './bid.service';
-import { BidValidation } from './bid.validations';
 
 const createBid = catchAsync(async (req: Request, res: Response) => {
-  await BidValidation.createBidZodSchema.parseAsync(req.body);
-
-  const result = await BidService.createBid(req.body);
+  const userId = (req.user as JwtPayload).userId
+  const result = await BidService.createBid(userId, req.body);
 
   sendResponse<IBid>(res, {
     statusCode: httpStatus.OK,
@@ -30,7 +28,7 @@ const getSingleBid = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IBid>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Bid fetched successfully',
+    message: 'Bid Fetched successfully',
     data: result,
   });
 });

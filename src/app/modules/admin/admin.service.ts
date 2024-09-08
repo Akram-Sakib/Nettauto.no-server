@@ -60,7 +60,6 @@ const getAllAdmins = async (
     andConditions.length > 0 ? { $and: andConditions } : {};
 
   const result = await Admin.find(whereConditions)
-    // .populate('managementAuction')
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);

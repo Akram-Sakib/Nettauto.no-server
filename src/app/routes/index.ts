@@ -7,6 +7,7 @@ import { BusinessCustomerRoutes } from '../modules/businessCustomer/businessCust
 import { PrivateCustomerRoutes } from '../modules/privateCustomer/privateCustomer.route';
 import { ProfileRoutes } from '../modules/profile/profile.route';
 import { UserRoutes } from '../modules/user/user.route';
+import { BidRoutes } from '../modules/bid/bid.routes';
 
 const router = express.Router();
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: '/private-customer',
     route: PrivateCustomerRoutes,
+  },
+  {
+    path: '/bids',
+    route: BidRoutes,
   },
   {
     path: '/auctions',

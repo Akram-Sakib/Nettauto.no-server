@@ -8,12 +8,54 @@ import {
   IBidFilters
 } from './bid.interfaces';
 import { Bid } from './bid.model';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
+import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
+import { BusinessCustomer } from '../businessCustomer/businessCustomer.model';
+import { Auction } from '../auction/auction.model';
 
-const createBid = async (BidData: IBid) => {
 
-  const result = new Bid(BidData);
-  return await result.save();
-}
+const createBid = async (userId: string, bidData: IBid): Promise<IBid> => {
+  // Find the user in either PrivateCustomer or BusinessCustomer
+  const privateCustomer = await PrivateCustomer.findOne({ userId });
+  const businessCustomer = await BusinessCustomer.findOne({ userId });
+  const activeCustomer = privateCustomer || businessCustomer;
+
+  if (!activeCustomer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Check if the user is active as a buyer
+  if (activeCustomer.activeAs !== 'buyer') {
+    throw new ApiError(httpStatus.FORBIDDEN, 'User is not active as a buyer');
+  }
+
+  // Check if the auction exists
+  const auction = await Auction.findById(bidData.auction).populate('sellerDetails');
+  if (!auction) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Auction not found');
+  }
+
+  // Check if the user is trying to bid on their own auction
+  // @ts-ignore
+  const isOwnAuction = String(auction.sellerDetails._id) === String(activeCustomer._id);
+  if (isOwnAuction) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'You cannot bid on your own auction');
+  }
+
+  // Find the highest current bidNumber in the database for incremental numbering
+  const lastBid = await Bid.findOne().sort({ bidNumber: -1 }).exec();
+  let newBidNumber = lastBid ? lastBid.bidNumber + 1 : 1;
+
+  // Assign the new bid number to the bid and the buyer's ID
+  bidData.bidNumber = newBidNumber;
+  bidData.buyer = activeCustomer._id;
+
+  // Create and save the new bid
+  const newBid = await Bid.create(bidData);
+
+  return newBid;
+};
 
 const getSingleBid = async (
   id: string
@@ -103,19 +145,6 @@ const updateBid = async (
 
   // return result;
 };
-
-// async updateBid(id: string, data: Partial<IBid>, images ?: Express.Multer.File[]) {
-//   const Bid = await BidModel.findById(id);
-//   if (!Bid) throw new Error('Bid not found');
-
-//   if (images) {
-//     const imageUrls = images.map((image) => image.path);
-//     Bid.images.push(...imageUrls);
-//   }
-
-//   Object.assign(Bid, data);
-//   return Bid.save();
-// }
 
 const deleteBid = async (
   id: string

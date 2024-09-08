@@ -8,6 +8,7 @@ export type IBid = {
   bidAmount: number
   bidTime: Date
   isTopBid: boolean
+  bidNumber: number
 };
 
 export type BidModel = Model<

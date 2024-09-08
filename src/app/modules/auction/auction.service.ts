@@ -12,6 +12,8 @@ import { Auction } from './auction.model';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 import { AuctionValidation } from './auction.validations';
+import { PrivateCustomer } from '../privateCustomer/privateCustomer.model';
+import { BusinessCustomer } from '../businessCustomer/businessCustomer.model';
 
 const createAuction = async (data: IAuction, files: any,
   userId: Types.ObjectId): Promise<IAuction> => {
@@ -122,7 +124,7 @@ const getAllAuctions = async (
 
   const queryConditions = andConditions.length > 0 ? { $and: andConditions } : {};
 
-  console.log(JSON.stringify(queryConditions, null, 2));
+  // console.log(JSON.stringify(queryConditions, null, 2));
 
 
   // Dynamic  Sort needs  field to  do sorting
@@ -188,6 +190,28 @@ const updateAuction = async (
       };
     }
   }
+  // Determine whether the user is a buyer or seller based on the activeAs field in the respective model
+  let isSeller = false;
+  let isBuyer = false;
+
+  // Try to find the user in the PrivateCustomer or BusinessCustomer model
+  const privateCustomer = await PrivateCustomer.findOne({ userId });
+  const businessCustomer = await BusinessCustomer.findOne({ userId });
+
+  if (privateCustomer && privateCustomer.activeAs) {
+    isSeller = privateCustomer.activeAs === 'seller';
+    isBuyer = privateCustomer.activeAs === 'buyer';
+  } else if (businessCustomer && businessCustomer.activeAs) {
+    isSeller = businessCustomer.activeAs === 'seller';
+    isBuyer = businessCustomer.activeAs === 'buyer';
+  }
+
+  // Update the corresponding field based on the role (buyer or seller)
+  if (isSeller) {
+    auctionData.sellerDetails = userId;
+  } else if (isBuyer) {
+    auctionData.buyerDetails = userId;
+  }
 
   // Combine existing auction details with updated fields
   const updatedAuctionData: Partial<IAuction> = {
@@ -199,11 +223,8 @@ const updateAuction = async (
       ...existingAuction.auctionDetails,
       ...auctionData.auctionDetails,
     },
-    // buyerDetails: {
-    //   ...existingAuction.buyerDetails,
-    //   ...auctionData.buyerDetails,
-    // },
-    sellerDetails: userId, // Ensure seller remains consistent
+    buyerDetails: auctionData.buyerDetails ?? existingAuction.buyerDetails,
+    sellerDetails: auctionData.sellerDetails ?? existingAuction.sellerDetails,
   };
 
   // Validate the updated data with Zod
@@ -231,26 +252,12 @@ const updateAuction = async (
   return updatedAuction;
 };
 
-// async updateAuction(id: string, data: Partial<IAuction>, images ?: Express.Multer.File[]) {
-//   const auction = await AuctionModel.findById(id);
-//   if (!auction) throw new Error('Auction not found');
-
-//   if (images) {
-//     const imageUrls = images.map((image) => image.path);
-//     auction.images.push(...imageUrls);
-//   }
-
-//   Object.assign(auction, data);
-//   return auction.save();
-// }
-
 const deleteAuction = async (
   id: string
 ): Promise<IAuction | null> => {
   const result = await Auction.findByIdAndDelete(id);
   return result;
 };
-
 
 
 export const AuctionService = {

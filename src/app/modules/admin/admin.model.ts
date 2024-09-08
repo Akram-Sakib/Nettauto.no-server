@@ -42,7 +42,8 @@ const AdminSchema = new Schema<IAdmin, AdminModel>(
     },
     profileImage: {
       type: String,
-    },
+    }, 
+    userId: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   {
     timestamps: true,
