@@ -154,6 +154,7 @@ const createAdmin = async (
   // set role
   user.accountStatus = ENUM_ACCOUNT_STATUS.ACTIVE;
   user.role = admin.role;
+  admin.email = user.email;
 
   let newUserAllData = null;
   const session = await mongoose.startSession();
@@ -238,7 +239,7 @@ const updateUserAccountStatusAndAdmin = async (
 
 const getAllUsers = async () => {
   // Fetch all users from the database, and populate the `businessCustomer` and `privateCustomer` if needed
-  const users = await User.find()
+  const users = await User.find({ $nor: [{ role: 'admin' }, { role: 'super_admin' }] })
     .populate('businessCustomer')
     .populate('privateCustomer')
     .populate('admin');

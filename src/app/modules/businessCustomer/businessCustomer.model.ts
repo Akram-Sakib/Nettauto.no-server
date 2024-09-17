@@ -37,6 +37,10 @@ export const BusinessCustomerSchema = new Schema<IBusinessCustomer, BusinessMode
       type: String,
       required: true,
     },
+    city: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: true,
@@ -70,7 +74,7 @@ export const BusinessCustomerSchema = new Schema<IBusinessCustomer, BusinessMode
     admin: {
       type: String,
       ref: "Admin"
-    }, 
+    },
     userId: { type: Schema.Types.ObjectId, ref: 'User' }
   },
   {

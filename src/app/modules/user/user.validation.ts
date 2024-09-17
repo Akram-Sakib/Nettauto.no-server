@@ -103,13 +103,12 @@ const userNameSchema = z.object({
 
 // Schema for IAdmin
 export const adminZodSchema = z.object({
-  // id: z.string(),
   name: userNameSchema,
   profileImage: z.string().url().optional(), // Assuming profileImage is a URL
-  dateOfBirth: z.coerce.date(), // Optional dateOfBirth field
-  email: z.string().email("Invalid email format"),
-  socialSecurityNo: z.string().min(9, "Social Security Number must be at least 9 characters"), // Adjust validation as needed
-  contactNo: z.string().min(10, "Contact number must be at least 10 digits"), // Adjust validation as needed
+  // dateOfBirth: z.coerce.date(), // Optional dateOfBirth field
+  // email: z.string().email("Invalid email format"),
+  socialSecurityNo: z.string().min(9, "Social Security Number must be at least 9 characters"), // 
+  contactNo: z.string().min(10, "Contact number must be at least 10 digits"), 
   role: z.enum([ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN]), // Role enum validation
 });
 
